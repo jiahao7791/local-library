@@ -12,7 +12,9 @@ var helmet = require('helmet');
 var app = express();
 
 //set up mongoose connection
-var mongoDB = 'mongodb+srv://Jiahao:WERTYhp58@cluster0.j9h9l.mongodb.net/local_library?retryWrites=true&w=majority';
+var dev_db_url ='mongodb+srv://Jiahao:WERTYhp58@cluster0.j9h9l.mongodb.net/local_library?retryWrites=true&w=majority'
+var mongoDB = process.env.MONGODB_URI || dev_db_url;
+
 mongoose.connect(mongoDB,{useNewUrlParser:true,useUnifiedTopology:true});
 var db = mongoose.connection;
 db.on('error',console.error.bind(console,'mongoDB connection error: '));
@@ -28,6 +30,7 @@ app.use(cookieParser());
 
 app.use(compression()); //Compress all routes
 app.use(helmet());
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
